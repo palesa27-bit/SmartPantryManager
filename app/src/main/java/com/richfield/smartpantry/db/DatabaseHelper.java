@@ -210,6 +210,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      * in the pantry in at least the required quantity.
      * Matching is robust to singular/plural and case differences.
      */
+    /**
+     * STRICT MATCHING RULE
+     * A recipe is only suggested if EVERY required ingredient exists
+     * in the pantry in at least the required quantity.
+     * Names are normalised (lowercase + simple plural rules) before comparison.
+     */
     public List<Recipe> getSuggestedRecipes() {
         List<PantryItem> pantry = getAllPantryItems();
         Map<String, Double> pantryMap = new HashMap<>();
