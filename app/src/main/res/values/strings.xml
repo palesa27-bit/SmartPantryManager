@@ -35,4 +35,5 @@
     <string name="method">Method</string>
     <string name="you_can_make">You can make this!</string>
     <string name="missing_ingredients">Missing ingredients</string>
+    <string name="about_database">Database: SQLite (offline-first, on-device storage)</string>
 </resources>
