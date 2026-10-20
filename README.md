@@ -31,6 +31,10 @@ Smart Pantry Manager helps users reduce food waste by tracking ingredients they 
 - Simple, reliable CRUD without external services
 - Perfect for a personal pantry app that does not need cloud sync
 
+## Database Choice: SQLite
+
+This app uses SQLite with SQLiteOpenHelper because it is fully offline,
+simple, and matches the persistent-data approach taught in the module.
 ## Screens (5+)
 
 1. **Pantry List** (Fragment) – View / manage ingredients
