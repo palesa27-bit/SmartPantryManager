@@ -23,6 +23,13 @@ Smart Pantry Manager helps users reduce food waste by tracking ingredients they 
 - **Data Persistence** – SQLite (SQLiteOpenHelper) – data survives app restarts
 - **Material Design UI** – Clean, modern, mobile-friendly interface
 
+- Add, view, edit and delete pantry items, with data stored in SQLite
+- Recipes stored in the database
+- Strict recipe matching: a recipe is only suggested when every ingredient is in the pantry in sufficient quantity
+- RecyclerView with a custom adapter for the pantry list
+- Intents to move between screens and pass item data
+- Input validation on the forms
+- Bottom navigation between screens
 ## Database Choice: SQLite
 
 **Why SQLite?**
