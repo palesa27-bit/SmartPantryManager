@@ -23,6 +23,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Screen that lists all recipes in a RecyclerView and marks which ones
+ * the user can make with the ingredients currently in the pantry.
+ */
 public class RecipesFragment extends Fragment implements RecipeAdapter.OnRecipeClickListener {
 
     private RecyclerView recyclerView;
@@ -30,6 +34,7 @@ public class RecipesFragment extends Fragment implements RecipeAdapter.OnRecipeC
     private RecipeAdapter adapter;
     private DatabaseHelper db;
 
+    /** Inflates the fragment's layout (fragment_recipes.xml). */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -37,6 +42,7 @@ public class RecipesFragment extends Fragment implements RecipeAdapter.OnRecipeC
         return inflater.inflate(R.layout.fragment_recipes, container, false);
     }
 
+    /** Finds the views and sets up the RecyclerView with its adapter, once the layout exists. */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -50,12 +56,22 @@ public class RecipesFragment extends Fragment implements RecipeAdapter.OnRecipeC
         recyclerView.setAdapter(adapter);
     }
 
+    /**
+     * Reloads the data every time the screen becomes visible, so changes made
+     * on the pantry screen are reflected here straight away.
+     */
     @Override
     public void onResume() {
         super.onResume();
         loadData();
     }
 
+    /**
+     * Reads recipes from SQLite and works out which ones can be made.
+     * getSuggestedRecipes() applies the strict rule: every ingredient must be
+     * in the pantry in sufficient quantity. Their IDs are collected in a Set
+     * so the adapter can quickly check whether to mark each recipe as makeable.
+     */
     private void loadData() {
         List<Recipe> recipes = db.getAllRecipes();
         List<Recipe> suggested = db.getSuggestedRecipes();
@@ -65,9 +81,11 @@ public class RecipesFragment extends Fragment implements RecipeAdapter.OnRecipeC
         }
         adapter.setRecipes(recipes);
         adapter.setCanMakeIds(canMakeIds);
+        // Handles singular and plural: "1 recipe", "18 recipes".
         tvCount.setText(recipes.size() + " recipe" + (recipes.size() != 1 ? "s" : ""));
     }
 
+    /** Opens the detail screen for the tapped recipe, passing its ID through an Intent extra. */
     @Override
     public void onRecipeClick(Recipe recipe) {
         Intent intent = new Intent(requireContext(), RecipeDetailActivity.class);
