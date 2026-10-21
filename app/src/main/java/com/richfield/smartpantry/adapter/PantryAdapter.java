@@ -15,8 +15,13 @@ import com.richfield.smartpantry.model.PantryItem;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Custom RecyclerView adapter that shows each pantry item as a card.
+ * It connects the list of PantryItem objects to the item_pantry.xml layout.
+ */
 public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.ViewHolder> {
 
+    /** Lets the Activity decide what happens when the edit or delete button is pressed. */
     public interface OnItemActionListener {
         void onEdit(PantryItem item);
         void onDelete(PantryItem item);
@@ -29,11 +34,17 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.ViewHolder
         this.listener = listener;
     }
 
+    /** Replaces the list with fresh data from the database and redraws the screen. */
     public void setItems(List<PantryItem> items) {
         this.items = items != null ? items : new ArrayList<>();
         notifyDataSetChanged();
     }
 
+    /**
+     * Inflates the card layout (item_pantry.xml) into a View.
+     * This only runs a few times, because RecyclerView reuses cards
+     * as they scroll off screen instead of creating new ones.
+     */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -42,11 +53,16 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.ViewHolder
         return new ViewHolder(view);
     }
 
+    /**
+     * Fills one card with the data of one pantry item.
+     * Runs every time a card scrolls into view.
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         PantryItem item = items.get(position);
         holder.tvName.setText(item.getName());
 
+        // Show whole numbers without a decimal point (2 instead of 2.0).
         String qtyText;
         if (item.getQuantity() == (long) item.getQuantity()) {
             qtyText = (long) item.getQuantity() + " " + item.getUnit();
@@ -55,6 +71,7 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.ViewHolder
         }
         holder.tvQuantity.setText(qtyText);
 
+        // Only show the expiry line when the item actually has an expiry date.
         if (item.getExpiryDate() != null && !item.getExpiryDate().isEmpty()) {
             holder.tvExpiry.setVisibility(View.VISIBLE);
             holder.tvExpiry.setText("Expires: " + item.getExpiryDate());
@@ -62,6 +79,7 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.ViewHolder
             holder.tvExpiry.setVisibility(View.GONE);
         }
 
+        // Pass button presses back to the Activity through the listener.
         holder.btnEdit.setOnClickListener(v -> {
             if (listener != null) listener.onEdit(item);
         });
@@ -70,11 +88,13 @@ public class PantryAdapter extends RecyclerView.Adapter<PantryAdapter.ViewHolder
         });
     }
 
+    /** RecyclerView asks this to know how many cards to prepare. */
     @Override
     public int getItemCount() {
         return items.size();
     }
 
+    /** Holds references to the views inside one card so they are looked up only once. */
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvName, tvQuantity, tvExpiry;
         ImageButton btnEdit, btnDelete;
